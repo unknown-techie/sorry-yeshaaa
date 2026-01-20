@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I'm So Sorry ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Cutudiiii ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
     <style>
         /* --- RESET & BASICS --- */
@@ -14,25 +14,28 @@
         }
 
         body {
-            overflow: hidden;
+            /* Handles mobile address bar height issues */
+            min-height: 100vh;
+            min-height: 100dvh; 
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             font-family: 'Poppins', sans-serif;
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
             position: relative;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-y: auto;   /* Allow vertical scroll if phone is small */
         }
 
         /* --- ANIMATED BACKGROUND --- */
         .stars {
-            position: absolute;
+            position: fixed; /* Fixed so it stays put while scrolling */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: -1;
         }
 
         /* --- GLASSMORPHISM CARD --- */
@@ -47,17 +50,14 @@
             width: 90%;
             max-width: 500px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            z-index: 10;
-            transform: translateY(30px);
+            margin: 20px; /* Margin for safe scrolling on mobile */
             opacity: 0;
             animation: floatUp 1s ease-out forwards 0.5s;
         }
 
         @keyframes floatUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         /* --- TYPOGRAPHY --- */
@@ -65,10 +65,11 @@
             font-family: 'Dancing Script', cursive;
             font-size: 3.5rem;
             margin-bottom: 10px;
+            line-height: 1.1;
             background: linear-gradient(to right, #ff9a9e, #fecfef);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(255, 154, 158, 0.5);
+            text-shadow: 0 0 20px rgba(255, 154, 158, 0.3);
         }
 
         p {
@@ -78,9 +79,27 @@
             margin-bottom: 25px;
         }
 
-        .highlight {
+        b {
             color: #ff9a9e;
             font-weight: 500;
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 600px) {
+            .card {
+                padding: 25px 20px;
+            }
+            h1 {
+                font-size: 2.5rem; /* Smaller title for phone */
+            }
+            p {
+                font-size: 0.95rem; /* Readable text size */
+                line-height: 1.5;
+            }
+            .icon-container {
+                font-size: 3rem;
+                margin-bottom: 10px;
+            }
         }
 
         /* --- BUTTON STYLING --- */
@@ -92,7 +111,7 @@
             padding: 12px 35px;
             border: none;
             border-radius: 50px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
@@ -100,6 +119,8 @@
             position: relative;
             overflow: hidden;
             outline: none;
+            /* Prevent tap highlight on mobile */
+            -webkit-tap-highlight-color: transparent; 
         }
 
         .btn-primary {
@@ -108,18 +129,19 @@
             box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover, .btn-primary:active {
             transform: scale(1.05);
             box-shadow: 0 8px 25px rgba(255, 117, 140, 0.6);
         }
 
         /* --- HEART ANIMATION --- */
         .heart {
-            position: absolute;
+            position: fixed; /* Fixed to viewport */
             top: -10vh;
             font-size: 2rem;
             animation: fall linear forwards;
-            z-index: 5;
+            z-index: 100;
+            pointer-events: none; /* Let clicks pass through */
         }
 
         @keyframes fall {
@@ -145,6 +167,7 @@
         .hidden-message {
             display: none;
             margin-top: 20px;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #ff9a9e;
             animation: fadeIn 1s ease;
@@ -165,8 +188,10 @@
         <div class="icon-container">🥺</div>
         <h1>I'm So Sorry my cutudiiii</h1>
         <p>
-            Hey my love my cutie my sweetie ❤️
-            I know I messed up by falling asleep early without telling you and by not giving you the time you deserved, and I'm really sorry 😔 You matter to me more than anything, and I hate that my busy day made you feel neglected. I promise I'll make it up to you and be more present next time 🙏 Please don't stay mad at me — I miss you already 🤍🥺🥺
+            Hey my love my cutie my sweetie ❤️<br><br>
+            I know I messed up by falling asleep early without telling you and by not giving you the time you deserved, and I'm really sorry 😔 
+            <br><br>
+            You matter to me more than anything, and I hate that my busy day made you feel neglected. I promise I'll make it up to you and be more present next time 🙏 Please don't stay mad at me — I miss you already 🤍🥺🥺
             <br><br>
             My job drains my battery, but <b>you are my charger</b>. 
             I promise to make time for us. 🤞🤞
@@ -186,11 +211,16 @@
         const canvas = document.getElementById('starCanvas');
         const ctx = canvas.getContext('2d');
         
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Handle Resize properly for mobile address bars
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         const stars = [];
-        const numStars = 200;
+        const numStars = 150; // Reduced slightly for mobile performance
 
         for (let i = 0; i < numStars; i++) {
             stars.push({
@@ -223,12 +253,6 @@
         }
         animateStars();
 
-        // Handle Resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
         // --- HEART EXPLOSION LOGIC ---
         function forgiveMe() {
             const btn = document.querySelector('.btn-primary');
@@ -237,9 +261,16 @@
             btn.style.display = 'none'; // Hide button
             msg.style.display = 'block'; // Show success message
             
-            // Create Heart Rain
-            setInterval(createHeart, 100);
-            setInterval(createHeart, 150);
+            // Create Heart Rain - More intense for effect
+            const duration = 5000; // 5 seconds of rain
+            const interval = 100; 
+            
+            const rain = setInterval(createHeart, interval);
+            
+            // Stop creating hearts after 5 seconds to save mobile battery
+            setTimeout(() => {
+                clearInterval(rain);
+            }, duration);
         }
 
         function createHeart() {
@@ -259,247 +290,3 @@
     </script>
 </body>
 </html>
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I'm Sorry ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #ff4d6d;
-            --secondary: #c9184a;
-            --bg-color: #0f0f1a;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            height: 100vh;
-            width: 100vw;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 50%, #2a1b3d 0%, #0f0f1a 100%);
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Poppins', sans-serif;
-            color: white;
-            position: relative;
-        }
-
-        /* Background Hearts Animation */
-        .heart-bg {
-            position: absolute;
-            color: var(--primary);
-            opacity: 0;
-            animation: floatUp 6s linear infinite;
-            font-size: 20px;
-            user-select: none;
-            z-index: 0;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            20% { opacity: 0.6; }
-            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-        }
-
-        /* Main Glass Card */
-        .card {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 500px;
-            padding: 40px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            text-align: center;
-            transform: translateY(20px);
-            opacity: 0;
-            animation: slideIn 1s ease forwards;
-        }
-
-        @keyframes slideIn {
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 10px rgba(255, 77, 109, 0.3);
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #ccc;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .highlight {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        /* The Button */
-        .btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Success Message State */
-        .success-content {
-            display: none;
-        }
-        
-        .visible {
-            display: block;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.5); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .big-heart {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            animation: heartbeat 1.5s infinite;
-        }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            15% { transform: scale(1.3); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-    </style>
-</head>
-<body>
-
-    <div id="bg-container"></div>
-
-    <div class="card">
-        <div id="apology-content">
-            <h1>I'm So Sorry</h1>
-            <p class="subtitle">
-                I know I messed up by falling asleep without telling you. 
-                <br><br>
-                Coding all day drains my brain, but that's no excuse for ignoring my heart. 
-                <br>
-                Please forgive your sleepy <span class="highlight">Software Engineer?</span> 🥺
-            </p>
-            <button class="btn" onclick="forgiveMe()">I Forgive You ❤️</button>
-        </div>
-
-        <div id="success-content" class="success-content">
-            <div class="big-heart">💖</div>
-            <h1>Thank You!</h1>
-            <p class="subtitle">I promise to text you before I crash tonight.<br>I love you!</p>
-        </div>
-    </div>
-
-    <script>
-        // Create floating background hearts
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart-bg');
-            heart.innerHTML = '❤';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
-            
-            document.getElementById('bg-container').appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 6000);
-        }
-
-        setInterval(createHeart, 300);
-
-        // Interaction Function
-        function forgiveMe() {
-            const apologyDiv = document.getElementById('apology-content');
-            const successDiv = document.getElementById('success-content');
-
-            // Hide apology, show love
-            apologyDiv.style.display = 'none';
-            successDiv.classList.add('visible');
-
-            // Trigger confetti effect (Simple JS implementation)
-            for(let i=0; i<50; i++) {
-                createConfetti();
-            }
-        }
-
-        function createConfetti() {
-            const colors = ['#ff4d6d', '#c9184a', '#ffffff', '#ffb3c1'];
-            const confetti = document.createElement('div');
-            confetti.style.position = 'absolute';
-            confetti.style.width = '10px';
-            confetti.style.height = '10px';
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.left = '50%';
-            confetti.style.top = '50%';
-            confetti.style.zIndex = '100';
-            document.body.appendChild(confetti);
-
-            const x = (Math.random() - 0.5) * window.innerWidth;
-            const y = (Math.random() - 0.5) * window.innerHeight;
-
-            const animation = confetti.animate([
-                { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
-                { transform: `translate(${x}px, ${y}px) rotate(720deg)`, opacity: 0 }
-            ], {
-                duration: 1500,
-                easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
-            });
-
-            animation.onfinish = () => confetti.remove();
-        }
-    </script>
-</body>
-</html> -->
