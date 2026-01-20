@@ -13,29 +13,33 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%; /* Essential for mobile scroll */
+            width: 100%;
+        }
+
         body {
-            /* Handles mobile address bar height issues */
-            min-height: 100vh;
-            min-height: 100dvh; 
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             color: white;
-            position: relative;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            overflow-y: auto;   /* Allow vertical scroll if phone is small */
+            
+            /* --- THE SCROLL FIX --- */
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Force vertical scrollbar if needed */
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch; /* Smooth scroll on iPhone */
         }
 
         /* --- ANIMATED BACKGROUND --- */
         .stars {
-            position: fixed; /* Fixed so it stays put while scrolling */
+            position: fixed; /* Stays fixed behind while you scroll content */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
+            pointer-events: none;
         }
 
         /* --- GLASSMORPHISM CARD --- */
@@ -44,13 +48,20 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px;
+            padding: 30px 25px;
             border-radius: 20px;
             text-align: center;
-            width: 90%;
+            width: 85%;
             max-width: 500px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            margin: 20px; /* Margin for safe scrolling on mobile */
+            
+            /* --- THE SCROLL FIX PART 2 --- */
+            /* This centers the card when there is space, 
+               but allows scrolling when space runs out */
+            margin: auto; 
+            margin-top: 40px;    /* Give space at the top */
+            margin-bottom: 40px; /* Give space at the bottom */
+            
             opacity: 0;
             animation: floatUp 1s ease-out forwards 0.5s;
         }
@@ -63,8 +74,8 @@
         /* --- TYPOGRAPHY --- */
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            margin-bottom: 15px;
             line-height: 1.1;
             background: linear-gradient(to right, #ff9a9e, #fecfef);
             -webkit-background-clip: text;
@@ -73,7 +84,7 @@
         }
 
         p {
-            font-size: 1.1rem;
+            font-size: 1rem;
             line-height: 1.6;
             color: #e0e0e0;
             margin-bottom: 25px;
@@ -84,27 +95,17 @@
             font-weight: 500;
         }
 
-        /* --- MOBILE OPTIMIZATION --- */
-        @media (max-width: 600px) {
-            .card {
-                padding: 25px 20px;
-            }
-            h1 {
-                font-size: 2.5rem; /* Smaller title for phone */
-            }
-            p {
-                font-size: 0.95rem; /* Readable text size */
-                line-height: 1.5;
-            }
-            .icon-container {
-                font-size: 3rem;
-                margin-bottom: 10px;
-            }
+        /* --- MOBILE TWEAKS --- */
+        @media (max-width: 400px) {
+            h1 { font-size: 2.4rem; }
+            p { font-size: 0.9rem; }
+            .card { width: 90%; padding: 25px 15px; }
         }
 
         /* --- BUTTON STYLING --- */
         .btn-group {
             margin-top: 20px;
+            padding-bottom: 10px; /* Extra padding for bottom touch area */
         }
 
         button {
@@ -119,7 +120,6 @@
             position: relative;
             overflow: hidden;
             outline: none;
-            /* Prevent tap highlight on mobile */
             -webkit-tap-highlight-color: transparent; 
         }
 
@@ -129,30 +129,13 @@
             box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
         }
 
-        .btn-primary:hover, .btn-primary:active {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.6);
-        }
-
-        /* --- HEART ANIMATION --- */
-        .heart {
-            position: fixed; /* Fixed to viewport */
-            top: -10vh;
-            font-size: 2rem;
-            animation: fall linear forwards;
-            z-index: 100;
-            pointer-events: none; /* Let clicks pass through */
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
+        .btn-primary:active {
+            transform: scale(0.95);
         }
 
         /* --- PULSING AVATAR/ICON --- */
         .icon-container {
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 15px;
             animation: heartbeat 1.5s infinite;
         }
@@ -163,11 +146,25 @@
             100% { transform: scale(1); }
         }
         
+        /* --- HEART ANIMATION --- */
+        .heart {
+            position: fixed;
+            top: -10vh;
+            font-size: 2rem;
+            animation: fall linear forwards;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
         /* HIDDEN MESSAGE */
         .hidden-message {
             display: none;
             margin-top: 20px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: #ff9a9e;
             animation: fadeIn 1s ease;
@@ -211,7 +208,6 @@
         const canvas = document.getElementById('starCanvas');
         const ctx = canvas.getContext('2d');
         
-        // Handle Resize properly for mobile address bars
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -220,7 +216,7 @@
         resizeCanvas();
 
         const stars = [];
-        const numStars = 150; // Reduced slightly for mobile performance
+        const numStars = 100;
 
         for (let i = 0; i < numStars; i++) {
             stars.push({
@@ -240,12 +236,10 @@
                 ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
                 ctx.fill();
                 
-                // Twinkle effect
                 star.alpha += (Math.random() - 0.5) * 0.05;
                 if (star.alpha < 0) star.alpha = 0;
                 if (star.alpha > 1) star.alpha = 1;
 
-                // Move slightly
                 star.y -= star.velocity;
                 if (star.y < 0) star.y = canvas.height;
             });
@@ -258,16 +252,13 @@
             const btn = document.querySelector('.btn-primary');
             const msg = document.getElementById('successMsg');
             
-            btn.style.display = 'none'; // Hide button
-            msg.style.display = 'block'; // Show success message
+            btn.style.display = 'none'; 
+            msg.style.display = 'block'; 
             
-            // Create Heart Rain - More intense for effect
-            const duration = 5000; // 5 seconds of rain
+            const duration = 5000; 
             const interval = 100; 
-            
             const rain = setInterval(createHeart, interval);
             
-            // Stop creating hearts after 5 seconds to save mobile battery
             setTimeout(() => {
                 clearInterval(rain);
             }, duration);
@@ -280,7 +271,6 @@
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.animationDuration = Math.random() * 2 + 3 + 's';
             heart.style.fontSize = Math.random() * 20 + 20 + 'px';
-            
             document.body.appendChild(heart);
 
             setTimeout(() => {
