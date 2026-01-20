@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Cutudiiii ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm So Sorry ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
     <style>
         /* --- RESET & BASICS --- */
@@ -13,33 +13,26 @@
             box-sizing: border-box;
         }
 
-        html, body {
-            height: 100%; /* Essential for mobile scroll */
-            width: 100%;
-        }
-
         body {
+            overflow: hidden;
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             font-family: 'Poppins', sans-serif;
-            color: white;
-            
-            /* --- THE SCROLL FIX --- */
+            height: 100vh;
             display: flex;
-            flex-direction: column;
-            overflow-y: auto; /* Force vertical scrollbar if needed */
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch; /* Smooth scroll on iPhone */
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
         }
 
         /* --- ANIMATED BACKGROUND --- */
         .stars {
-            position: fixed; /* Stays fixed behind while you scroll content */
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            pointer-events: none;
+            z-index: 0;
         }
 
         /* --- GLASSMORPHISM CARD --- */
@@ -48,71 +41,58 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 30px 25px;
+            padding: 40px;
             border-radius: 20px;
             text-align: center;
-            width: 85%;
+            width: 90%;
             max-width: 500px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            
-            /* --- THE SCROLL FIX PART 2 --- */
-            /* This centers the card when there is space, 
-               but allows scrolling when space runs out */
-            margin: auto; 
-            margin-top: 40px;    /* Give space at the top */
-            margin-bottom: 40px; /* Give space at the bottom */
-            
+            z-index: 10;
+            transform: translateY(30px);
             opacity: 0;
             animation: floatUp 1s ease-out forwards 0.5s;
         }
 
         @keyframes floatUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         /* --- TYPOGRAPHY --- */
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            margin-bottom: 15px;
-            line-height: 1.1;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
             background: linear-gradient(to right, #ff9a9e, #fecfef);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(255, 154, 158, 0.3);
+            text-shadow: 0 0 20px rgba(255, 154, 158, 0.5);
         }
 
         p {
-            font-size: 1rem;
+            font-size: 1.1rem;
             line-height: 1.6;
             color: #e0e0e0;
             margin-bottom: 25px;
         }
 
-        b {
+        .highlight {
             color: #ff9a9e;
             font-weight: 500;
-        }
-
-        /* --- MOBILE TWEAKS --- */
-        @media (max-width: 400px) {
-            h1 { font-size: 2.4rem; }
-            p { font-size: 0.9rem; }
-            .card { width: 90%; padding: 25px 15px; }
         }
 
         /* --- BUTTON STYLING --- */
         .btn-group {
             margin-top: 20px;
-            padding-bottom: 10px; /* Extra padding for bottom touch area */
         }
 
         button {
             padding: 12px 35px;
             border: none;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
@@ -120,7 +100,6 @@
             position: relative;
             overflow: hidden;
             outline: none;
-            -webkit-tap-highlight-color: transparent; 
         }
 
         .btn-primary {
@@ -129,13 +108,29 @@
             box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
         }
 
-        .btn-primary:active {
-            transform: scale(0.95);
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.6);
+        }
+
+        /* --- HEART ANIMATION --- */
+        .heart {
+            position: absolute;
+            top: -10vh;
+            font-size: 2rem;
+            animation: fall linear forwards;
+            z-index: 5;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
         }
 
         /* --- PULSING AVATAR/ICON --- */
         .icon-container {
-            font-size: 3.5rem;
+            font-size: 4rem;
             margin-bottom: 15px;
             animation: heartbeat 1.5s infinite;
         }
@@ -146,25 +141,10 @@
             100% { transform: scale(1); }
         }
         
-        /* --- HEART ANIMATION --- */
-        .heart {
-            position: fixed;
-            top: -10vh;
-            font-size: 2rem;
-            animation: fall linear forwards;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); }
-        }
-
         /* HIDDEN MESSAGE */
         .hidden-message {
             display: none;
             margin-top: 20px;
-            font-size: 1.1rem;
             font-weight: bold;
             color: #ff9a9e;
             animation: fadeIn 1s ease;
@@ -185,10 +165,8 @@
         <div class="icon-container">🥺</div>
         <h1>I'm So Sorry my cutudiiii</h1>
         <p>
-            Hey my love my cutie my sweetie ❤️<br><br>
-            I know I messed up by falling asleep early without telling you and by not giving you the time you deserved, and I'm really sorry 😔 
-            <br><br>
-            You matter to me more than anything, and I hate that my busy day made you feel neglected. I promise I'll make it up to you and be more present next time 🙏 Please don't stay mad at me — I miss you already 🤍🥺🥺
+            Hey my love my cutie my sweetie ❤️
+            I know I messed up by falling asleep early without telling you and by not giving you the time you deserved, and I'm really sorry 😔 You matter to me more than anything, and I hate that my busy day made you feel neglected. I promise I'll make it up to you and be more present next time 🙏 Please don't stay mad at me — I miss you already 🤍🥺🥺
             <br><br>
             My job drains my battery, but <b>you are my charger</b>. 
             I promise to make time for us. 🤞🤞
@@ -208,15 +186,11 @@
         const canvas = document.getElementById('starCanvas');
         const ctx = canvas.getContext('2d');
         
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
         const stars = [];
-        const numStars = 100;
+        const numStars = 200;
 
         for (let i = 0; i < numStars; i++) {
             stars.push({
@@ -236,10 +210,12 @@
                 ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
                 ctx.fill();
                 
+                // Twinkle effect
                 star.alpha += (Math.random() - 0.5) * 0.05;
                 if (star.alpha < 0) star.alpha = 0;
                 if (star.alpha > 1) star.alpha = 1;
 
+                // Move slightly
                 star.y -= star.velocity;
                 if (star.y < 0) star.y = canvas.height;
             });
@@ -247,21 +223,23 @@
         }
         animateStars();
 
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
         // --- HEART EXPLOSION LOGIC ---
         function forgiveMe() {
             const btn = document.querySelector('.btn-primary');
             const msg = document.getElementById('successMsg');
             
-            btn.style.display = 'none'; 
-            msg.style.display = 'block'; 
+            btn.style.display = 'none'; // Hide button
+            msg.style.display = 'block'; // Show success message
             
-            const duration = 5000; 
-            const interval = 100; 
-            const rain = setInterval(createHeart, interval);
-            
-            setTimeout(() => {
-                clearInterval(rain);
-            }, duration);
+            // Create Heart Rain
+            setInterval(createHeart, 100);
+            setInterval(createHeart, 150);
         }
 
         function createHeart() {
@@ -271,6 +249,7 @@
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.animationDuration = Math.random() * 2 + 3 + 's';
             heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+            
             document.body.appendChild(heart);
 
             setTimeout(() => {
